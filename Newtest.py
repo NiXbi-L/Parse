@@ -10,6 +10,7 @@ link = {
     "links": [],
     "Child elements": []
 }
+import sys
 
 
 async def download_pdf(url):
@@ -110,7 +111,7 @@ async def appendChild(i):
         link["Child elements"].append(lk)
 
 
-async def appendChild2(j, append_dict):
+async def appendChild2(j, append_dict, name):
     content_list = await get_content(j)
     if content_list:
         lk = {
@@ -125,11 +126,15 @@ async def appendChild2(j, append_dict):
         append_dict["Child elements"].append(lk)
         link["Child elements"].append(append_dict)
 
-    await save_dict_to_json(link, "parseDepth2.json")
+    await save_dict_to_json(link, f"{name}.json")
 
 
 async def main():
-    url = "https://cnki.net/index/"
+    if len(sys.argv) < 3:
+        print("Ошибка: Укажите 2 агрумента. 1 - это url 2 - это имя сохраняемого файла")
+        sys.exit(1)
+
+    url = sys.argv[1]
     content_list = await get_content(url)
     tasks = []
     if content_list:
@@ -147,7 +152,7 @@ async def main():
     for i in link["Child elements"]:
         for j in i['links']:
             print(f'curent link: {j} in {i["this link"]}')
-            task = asyncio.create_task(appendChild2(j, i))
+            task = asyncio.create_task(appendChild2(j, i, sys.argv[2]))
 
 
 asyncio.run(main())
