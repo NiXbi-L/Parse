@@ -16,7 +16,6 @@ link = {
 }
 
 
-
 async def download_pdf(url):
     try:
         save_path = url.split('/')[-1]
@@ -56,7 +55,7 @@ async def get_links(content_div, url):
         absolute_url = urljoin(url, href)
         if (str(absolute_url).startswith("https:") or str(absolute_url).startswith("http:")) and not (
                 'twitter.com' in str(absolute_url) or 'youtube.com' in str(absolute_url) or 'facebook.com' in str(
-                absolute_url)):
+            absolute_url)):
             absolute_links.append(absolute_url)
 
     return absolute_links
@@ -103,6 +102,8 @@ async def get_content(url, is_browser=False):
 
 async def appendChild(i):
     content_list = await get_content(i)
+    if not (content_list):
+        content_list = await get_content(i, True)
     if content_list:
         lk = {
             "title": "",
@@ -121,6 +122,8 @@ async def appendChild(i):
 
 async def appendChild2(j, append_dict, name):
     content_list = await get_content(j)
+    if not (content_list):
+        content_list = await get_content(j, True)
     if content_list:
         lk = {
             "title": "",
@@ -147,12 +150,13 @@ async def main():
 
     url = sys.argv[1]
     content_list = await get_content(url)
+    if not (content_list):
+        content_list = await get_content(url, True)
     tasks = []
     if content_list:
         link["source_url"] = url
         link["Content"] = list(set(content_list[0]))
         link["links"] = content_list[1]
-
 
     for i in link["links"]:
         print(f'curent link: {i}')
