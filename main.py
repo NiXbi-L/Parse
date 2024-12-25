@@ -74,7 +74,7 @@ async def get_content(url, is_browser=False):
             response = requests.get(url)
             response.encoding = response.apparent_encoding
             html_code = response.text
-        print(html_code)
+        #print(html_code)
 
         soup = BeautifulSoup(html_code, 'html5lib')
 
