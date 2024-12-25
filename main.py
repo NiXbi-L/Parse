@@ -91,7 +91,10 @@ async def get_content(url, is_browser=False):
 
         for i in lists:
             lis.append(i.get_text(strip=True))
-        return [par + lis, await get_links(soup, url), title]
+
+        content_list = [par + lis, await get_links(soup, url), title]
+        if not(content_list[0] and content_list[1]):
+            return content_list
 
 
     except Exception as e:
@@ -150,7 +153,7 @@ async def main():
 
     url = sys.argv[1]
     content_list = await get_content(url)
-    if not(content_list[0] and content_list[1]):
+    if not(content_list):
         content_list = await get_content(url, True)
     tasks = []
     if content_list:
