@@ -62,16 +62,19 @@ async def get_links(content_div, url):
     return absolute_links
 
 
-async def get_content(url):
+async def get_content(url, is_browser=False):
     try:
         if ('.pdf' in url.split("/")[-1]):
             await download_pdf(url)
             return False
 
-        # response = requests.get(url)
-        # response.encoding = response.apparent_encoding
-        # html_code = response.text
-        html_code = await get_html(url)
+        html_code = ''
+        if is_browser:
+            html_code = await get_html(url)
+        else:
+            response = requests.get(url)
+            response.encoding = response.apparent_encoding
+            html_code = response.text
         print(html_code)
 
         soup = BeautifulSoup(html_code, 'html5lib')
