@@ -150,7 +150,7 @@ async def main():
 
     url = sys.argv[1]
     content_list = await get_content(url)
-    if not (content_list):
+    if not(content_list[0] and content_list[1]):
         content_list = await get_content(url, True)
     tasks = []
     if content_list:
@@ -169,7 +169,7 @@ async def main():
         for j in i['links']:
             print(f'curent link: {j} in {i["source_url"]}')
             task = asyncio.create_task(appendChild2(j, i, f'jsons/{sys.argv[2]}.json'))
-
+    print(content_list)
     await save_dict_to_json(link, f'jsons/{sys.argv[2]}.json')
 
 
