@@ -54,8 +54,9 @@
     "Python.nan.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "updating",
-    "last_opened_file_path": "C:/Users/Administrator/PycharmProjects/Parse"
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "master",
+    "last_opened_file_path": "C:/Users/User/PycharmProjects/Parse"
   }
 }]]></component>
   <component name="SharedIndexes">
