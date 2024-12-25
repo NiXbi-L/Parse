@@ -5,7 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="06aa1177-4e4b-430a-afe0-990016869f70" name="Changes" comment="update">
-      <change beforePath="$PROJECT_DIR$/Newtest.py" beforeDir="false" afterPath="$PROJECT_DIR$/Newtest.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/PlaywrightFunc.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pattern.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Newtest.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,6 +52,7 @@
   "keyToString": {
     "DefaultHtmlFileTemplate": "HTML File",
     "Python.Newtest.executor": "Run",
+    "Python.T-lite.executor": "Run",
     "Python.main.executor": "Run",
     "Python.nan.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
@@ -78,8 +83,27 @@
       <option name="project" value="LOCAL" />
       <updated>1734773149994</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="update">
+      <option name="closed" value="true" />
+      <created>1734773569311</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1734773569311</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="update" />

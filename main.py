@@ -3,23 +3,21 @@ import requests
 from urllib.parse import urljoin
 import json
 import asyncio
+import sys
+from PlaywrightFunc import get_html
 
 link = {
-    "this link": "",
+    "title": "",
+    "publish_time": None,
+    "source_url": "",
     "Content": [],
     "links": [],
     "Child elements": []
 }
-import sys
+
 
 
 async def download_pdf(url):
-    """
-    Скачивает PDF-файл по указанной ссылке и сохраняет его на диск.
-
-    :param url: Ссылка на PDF-файл.
-    :param save_path: Путь для сохранения файла (включая имя файла).
-    """
     try:
         save_path = url.split('/')[-1]
         # Отправляем GET-запрос на указанный URL
@@ -28,11 +26,11 @@ async def download_pdf(url):
         # Проверяем, что запрос успешен (статус код 200)
         if response.status_code == 200:
             # Открываем файл для записи в бинарном режиме
-            with open(save_path, 'wb') as file:
+            with open(f'pdf/{save_path}', 'wb') as file:
                 # Записываем содержимое ответа в файл
                 for chunk in response.iter_content(chunk_size=8192):
                     file.write(chunk)
-            print(f"PDF успешно скачан и сохранён по пути: {save_path}")
+            print(f"PDF успешно скачан и сохранён по пути: pdf/{save_path}")
         else:
             print(f"Ошибка при скачивании: Код статуса {response.status_code}")
     except Exception as e:
@@ -41,9 +39,7 @@ async def download_pdf(url):
 
 async def save_dict_to_json(data, filename):
     try:
-        # Открываем файл для записи
         with open(filename, 'w', encoding='utf-8') as file:
-            # Преобразуем словарь в JSON и записываем в файл
             json.dump(data, file, ensure_ascii=False, indent=4)
         print(f"Словарь успешно сохранён в файл '{filename}'")
     except Exception as e:
@@ -72,9 +68,11 @@ async def get_content(url):
             await download_pdf(url)
             return False
 
-        response = requests.get(url)
-        response.encoding = response.apparent_encoding
-        html_code = response.text
+        # response = requests.get(url)
+        # response.encoding = response.apparent_encoding
+        # html_code = response.text
+        html_code = await get_html(url)
+        print(html_code)
 
         soup = BeautifulSoup(html_code, 'html5lib')
 
@@ -82,12 +80,16 @@ async def get_content(url):
         lists = soup.find_all('li')
         lis = []
         par = []
+        title = soup.find('title')
+        if title:
+            title = title.get_text(strip=True)
+
         for i in paragraph:
             par.append(i.get_text(strip=True))
 
         for i in lists:
             lis.append(i.get_text(strip=True))
-        return [par + lis, await get_links(soup, url)]
+        return [par + lis, await get_links(soup, url), title]
 
 
     except Exception as e:
@@ -100,7 +102,9 @@ async def appendChild(i):
     content_list = await get_content(i)
     if content_list:
         lk = {
-            "this link": i,
+            "title": "",
+            "publish_time": None,
+            "source_url": "",
             "Content": [],
             "links": [],
             "Child elements": []
@@ -108,6 +112,7 @@ async def appendChild(i):
 
         lk["Content"] = list(set(content_list[0]))
         lk["links"] = content_list[1]
+        lk["title"] = content_list[2]
         link["Child elements"].append(lk)
 
 
@@ -115,7 +120,9 @@ async def appendChild2(j, append_dict, name):
     content_list = await get_content(j)
     if content_list:
         lk = {
-            "this link": j,
+            "title": "",
+            "publish_time": None,
+            "source_url": "",
             "Content": [],
             "links": [],
             "Child elements": []
@@ -123,6 +130,7 @@ async def appendChild2(j, append_dict, name):
 
         lk["Content"] = list(set(content_list[0]))
         lk["links"] = content_list[1]
+        lk["title"] = content_list[2]
         append_dict["Child elements"].append(lk)
         link["Child elements"].append(append_dict)
 
@@ -138,9 +146,10 @@ async def main():
     content_list = await get_content(url)
     tasks = []
     if content_list:
-        link["this link"] = url
+        link["source_url"] = url
         link["Content"] = list(set(content_list[0]))
         link["links"] = content_list[1]
+
 
     for i in link["links"]:
         print(f'curent link: {i}')
@@ -151,8 +160,10 @@ async def main():
 
     for i in link["Child elements"]:
         for j in i['links']:
-            print(f'curent link: {j} in {i["this link"]}')
-            task = asyncio.create_task(appendChild2(j, i, sys.argv[2]))
+            print(f'curent link: {j} in {i["source_url"]}')
+            task = asyncio.create_task(appendChild2(j, i, f'jsons/{sys.argv[2]}.json'))
+
+    await save_dict_to_json(link, f'jsons/{sys.argv[2]}.json')
 
 
 asyncio.run(main())
