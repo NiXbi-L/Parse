@@ -93,8 +93,10 @@ async def get_content(url, is_browser=False):
             lis.append(i.get_text(strip=True))
 
         content_list = [par + lis, await get_links(soup, url), title]
-        if not(content_list[0] and content_list[1]):
+        if content_list[0] or content_list[1]:
             return content_list
+        else:
+            return False
 
 
     except Exception as e:
