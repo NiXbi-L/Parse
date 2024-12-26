@@ -212,7 +212,7 @@ async def main():
     for i in link["Child elements"]:
         for j in i['links']:
             print(f'current link: {j} in {i["source_url"]}')
-            task = asyncio.create_task(appendChild2(j, i, f'jsons/{sys.argv[2]}.json'))
+            task = asyncio.create_task(appendChild2(j, i, f'jsons/{sys.argv[2]}'))
     await save_dict_to_json(result, f'jsons/{sys.argv[2]}.json')
 
 
