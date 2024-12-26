@@ -183,6 +183,8 @@ async def main():
         link["source_url"] = url
         link["Content"] = list(set(content_list[0]))
         link["links"] = content_list[1]
+        result.append(link)
+        result[0].pop("links")
 
     for i in link["links"]:
         print(f'current link: {i}')
