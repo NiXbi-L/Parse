@@ -5,6 +5,7 @@ import json
 import asyncio
 import sys
 from PlaywrightFunc import get_html
+import os
 
 link = {
     "title": "",
@@ -14,6 +15,8 @@ link = {
     "links": [],
     "Child elements": []
 }
+
+result = []
 
 
 async def download_pdf(url):
@@ -34,6 +37,20 @@ async def download_pdf(url):
             print(f"Ошибка при скачивании: Код статуса {response.status_code}")
     except Exception as e:
         print(f"Ошибка при скачивании: {e}")
+
+
+async def create_folders():
+    # Список папок, которые нужно создать
+    folders = ['jsons', 'pdf']
+
+    for folder in folders:
+        # Проверяем, существует ли папка
+        if not os.path.exists(folder):
+            # Создаем папку, если она не существует
+            os.makedirs(folder)
+            print(f'Папка "{folder}" успешно создана.')
+        else:
+            print(f'Папка "{folder}" уже существует.')
 
 
 async def save_dict_to_json(data, filename):
@@ -95,7 +112,8 @@ async def get_content(url, is_browser=False):
         content_list = [par + lis, await get_links(soup, url), title]
         if not(content_list[0] and content_list[1]):
             return content_list
-
+        else:
+            return False
 
     except Exception as e:
         print(f"Ошибка при обработке страницы: {e}")
@@ -121,6 +139,8 @@ async def appendChild(i):
         lk["links"] = content_list[1]
         lk["title"] = content_list[2]
         link["Child elements"].append(lk)
+        lk.pop["links"]
+        result.append(lk)
 
 
 async def appendChild2(j, append_dict, name):
@@ -142,11 +162,14 @@ async def appendChild2(j, append_dict, name):
         lk["title"] = content_list[2]
         append_dict["Child elements"].append(lk)
         link["Child elements"].append(append_dict)
+        lk.pop["links"]
+        result.append(lk)
 
-    await save_dict_to_json(link, f"{name}.json")
+    await save_dict_to_json(result, f"{name}.json")
 
 
 async def main():
+    await create_folders()
     if len(sys.argv) < 3:
         print("Ошибка: Укажите 2 агрумента. 1 - это url 2 - это имя сохраняемого файла")
         sys.exit(1)
@@ -162,7 +185,7 @@ async def main():
         link["links"] = content_list[1]
 
     for i in link["links"]:
-        print(f'curent link: {i}')
+        print(f'current link: {i}')
         task = asyncio.create_task(appendChild(i))
         tasks.append(task)
 
@@ -170,10 +193,10 @@ async def main():
 
     for i in link["Child elements"]:
         for j in i['links']:
-            print(f'curent link: {j} in {i["source_url"]}')
+            print(f'current link: {j} in {i["source_url"]}')
             task = asyncio.create_task(appendChild2(j, i, f'jsons/{sys.argv[2]}.json'))
     print(content_list)
-    await save_dict_to_json(link, f'jsons/{sys.argv[2]}.json')
+    await save_dict_to_json(result, f'jsons/{sys.argv[2]}.json')
 
 
 asyncio.run(main())
