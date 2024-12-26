@@ -15,9 +15,15 @@ link = {
     "links": [],
     "Child elements": []
 }
+link2 = {
+    "title": "",
+    "publish_time": None,
+    "source_url": "",
+    "Content": [],
+}
 
 result = []
-
+save_task = []
 
 async def download_pdf(url):
     try:
@@ -81,7 +87,9 @@ async def get_links(content_div, url):
 async def get_content(url, is_browser=False):
     try:
         if ('.pdf' in url.split("/")[-1]):
-            await download_pdf(url)
+            await asyncio.gather(*save_task)
+            save = asyncio.create_task(download_pdf(url))
+            save_task.append(save)
             return False
 
         html_code = ''
@@ -110,7 +118,7 @@ async def get_content(url, is_browser=False):
             lis.append(i.get_text(strip=True))
 
         content_list = [par + lis, await get_links(soup, url), title]
-        if not(content_list[0] and content_list[1]):
+        if content_list[0] and content_list[1]:
             return content_list
         else:
             return False
@@ -127,20 +135,23 @@ async def appendChild(i):
         content_list = await get_content(i, True)
     if content_list:
         lk = {
-            "title": "",
+            "title": content_list[2],
             "publish_time": None,
-            "source_url": "",
-            "Content": [],
-            "links": [],
+            "source_url": i,
+            "Content": list(set(content_list[0])),
+            "links": content_list[1],
             "Child elements": []
         }
 
-        lk["Content"] = list(set(content_list[0]))
-        lk["links"] = content_list[1]
-        lk["title"] = content_list[2]
+        lk2 = {
+            "title": lk["title"],
+            "publish_time": None,
+            "source_url": i,
+            "Content": lk["Content"],
+        }
+
         link["Child elements"].append(lk)
-        lk.pop["links"]
-        result.append(lk)
+        result.append(lk2)
 
 
 async def appendChild2(j, append_dict, name):
@@ -149,22 +160,24 @@ async def appendChild2(j, append_dict, name):
         content_list = await get_content(j, True)
     if content_list:
         lk = {
-            "title": "",
+            "title": content_list[2],
             "publish_time": None,
-            "source_url": "",
-            "Content": [],
-            "links": [],
+            "source_url": j,
+            "Content": list(set(content_list[0])),
+            "links": content_list[1],
             "Child elements": []
         }
 
-        lk["Content"] = list(set(content_list[0]))
-        lk["links"] = content_list[1]
-        lk["title"] = content_list[2]
+        lk2 = {
+            "title": lk["title"],
+            "publish_time": None,
+            "source_url": j,
+            "Content": lk["Content"],
+        }
+
         append_dict["Child elements"].append(lk)
         link["Child elements"].append(append_dict)
-        lk.pop["links"]
-        result.append(lk)
-
+        result.append(lk2)
     await save_dict_to_json(result, f"{name}.json")
 
 
@@ -183,8 +196,11 @@ async def main():
         link["source_url"] = url
         link["Content"] = list(set(content_list[0]))
         link["links"] = content_list[1]
-        result.append(link)
-        result[0].pop("links")
+        link["title"] = content_list[2]
+        link2["Content"] = link["Content"]
+        link2["source_url"] = link["source_url"]
+        link2["title"] = link["title"]
+        result.append(link2)
 
     for i in link["links"]:
         print(f'current link: {i}')
@@ -197,7 +213,6 @@ async def main():
         for j in i['links']:
             print(f'current link: {j} in {i["source_url"]}')
             task = asyncio.create_task(appendChild2(j, i, f'jsons/{sys.argv[2]}.json'))
-    print(content_list)
     await save_dict_to_json(result, f'jsons/{sys.argv[2]}.json')
 
 
