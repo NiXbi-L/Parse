@@ -104,8 +104,8 @@ async def get_content(url, is_browser=False):
         soup = BeautifulSoup(html_code, 'html5lib')
 
         paragraph = soup.find_all('p')
-        lists = soup.find_all('li')
-        lis = []
+        # lists = soup.find_all('li')
+        # lis = []
         par = []
         title = soup.find('title')
         if title:
@@ -114,10 +114,10 @@ async def get_content(url, is_browser=False):
         for i in paragraph:
             par.append(i.get_text(strip=True))
 
-        for i in lists:
-            lis.append(i.get_text(strip=True))
+        # for i in lists:
+        #     lis.append(i.get_text(strip=True))
 
-        content_list = [par + lis, await get_links(soup, url), title]
+        content_list = [par, await get_links(soup, url), title]
         if content_list[0] and content_list[1]:
             return content_list
         else:
