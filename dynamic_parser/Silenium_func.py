@@ -9,6 +9,7 @@ import random
 import logging
 from common_functions.сommon_functions import load_proxies
 from random import choice
+from config import chrome_path
 
 # Настройка логирования
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
@@ -57,7 +58,7 @@ def click_elements_sequentially(url, args):
     driver = None
     try:
         chrome_options = uc.ChromeOptions()
-        chrome_options.binary_location = "chrome-win64/chrome.exe"
+        chrome_options.binary_location = chrome_path
         chrome_options.add_argument("--disable-blink-features=AutomationControlled")
         chrome_options.add_argument("--start-maximized")
         chrome_options.add_argument("--disable-extensions")

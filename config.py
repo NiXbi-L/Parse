@@ -1,0 +1,1 @@
+chrome_path = "chrome-win64/chrome.exe"

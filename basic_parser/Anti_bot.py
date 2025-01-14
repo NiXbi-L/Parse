@@ -10,6 +10,7 @@ import logging
 from common_functions.сommon_functions import load_proxies
 from random import choice
 from dynamic_parser.Silenium_func import wait_for_page_load, wait_for_element
+from config import chrome_path
 
 # Настройка логирования
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
@@ -23,7 +24,7 @@ async def anti_bot_get_html(url, proxy=None):
     driver = None
     try:
         chrome_options = uc.ChromeOptions()
-        chrome_options.binary_location = "chrome-win64/chrome.exe"
+        chrome_options.binary_location = chrome_path
         chrome_options.add_argument("--disable-blink-features=AutomationControlled")
         chrome_options.add_argument("--start-maximized")
         chrome_options.add_argument("--disable-extensions")
