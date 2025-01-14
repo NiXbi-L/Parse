@@ -41,7 +41,7 @@
 Для запуска скрапера используйте следующую команду:
 
 ```bash
-python main.py <url> <имя_файла>
+python Basic_parser.py <url> <имя_файла>
 ```
 
 - `<url>`: URL веб-страницы, которую вы хотите обработать.
@@ -50,7 +50,7 @@ python main.py <url> <имя_файла>
 ### Пример
 
 ```bash
-python main.py https://example.com example_output
+python Basic_parser.py https://example.com example_output
 ```
 
 Это создаст JSON-файл с именем `example_output.json` в директории `jsons`, содержащий извлеченные данные.
