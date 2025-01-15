@@ -3,6 +3,7 @@ import json
 from bs4 import BeautifulSoup
 import asyncio
 from common_functions.сommon_functions import *
+import shutil
 
 # Структура для хранения данных
 link = {
@@ -104,4 +105,4 @@ async def html_to_json(html_folder):
 
         print("Обработка завершена.")
     finally:
-        os.rmdir(html_folder)
+        shutil.rmtree(html_folder)

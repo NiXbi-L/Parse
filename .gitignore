@@ -1,3 +1,7 @@
 chrome-win64/
 .idea/
 __pycache__/
+pdf/
+jsons/
+chromedriver.exe
+in.txt
