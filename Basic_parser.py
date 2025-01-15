@@ -28,15 +28,9 @@ async def parse_arg(args):
 
 async def main():
     await create_folders()
-
-    if len(sys.argv) < 3:
-        print("Ошибка: Нет обязательного аргумента url")
-        sys.exit(1)
-
     args = await parse_arg(sys.argv[1::])
     args['file_name'] = args['url'].split('/')[2]
     url = args['url']
-    print(args)
     if args["mode"] == "standart":
         if not (url is None):
             await start_standart(url, args)

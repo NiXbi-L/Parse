@@ -127,6 +127,8 @@ async def appendChild(url, args, append_dict=None):
 async def start_standart(url, args):
     TickSvaerTask = asyncio.create_task(tick_saver(args))
 
+    Links = [url]
+
     if args["proxy"] == "True":
         proxy_pool = load_proxies()
         content_list = await choise_Base_or_Dynamic_load(url, args, proxy=choice(proxy_pool))
@@ -152,8 +154,10 @@ async def start_standart(url, args):
             tasks = []
             for link_url in chunk:
                 print(f'current link: {link_url}')
-                task = asyncio.create_task(appendChild(link_url, args=args))
-                tasks.append(task)
+                if not (link_url in Links):
+                    task = asyncio.create_task(appendChild(link_url, args=args))
+                    tasks.append(task)
+                    Links.append(link_url)
             await asyncio.gather(*tasks)
 
     if args["depth"] == "3":
@@ -164,8 +168,11 @@ async def start_standart(url, args):
                 tasks = []
                 for link_url in chunk:
                     print(f'current link: {link_url} in {i["source_url"]}')
-                    task = asyncio.create_task(appendChild(link_url, args, i))
-                    tasks.append(task)
+                    if not (link_url in Links):
+                        task = asyncio.create_task(appendChild(link_url, args, i))
+                        tasks.append(task)
+                        Links.append(link_url)
                 await asyncio.gather(*tasks)
 
     TickSvaerTask.cancel()
+    await save_dict_to_json(result, f"jsons/{args['file_name']}.json")
