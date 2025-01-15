@@ -83,7 +83,7 @@ Playwright используется для эмуляции браузера. П
    chrome_path = "путь_к_chrome"              # Укажите путь к исполняемому файлу Chrome
    ```
 3. Убедитесь, что пути указаны корректно и файлы существуют.
-   [Используемая версия chrome](https://disk.yandex.ru/d/4-LIRoqhgDC2IQ)
+   [Используемая версия chrome](https://disk.yandex.ru/d/olB43YjmQOlbxg)
 
 ---
 
