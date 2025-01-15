@@ -4,6 +4,7 @@ from basic_parser.url_pool_mode import start_url_pool
 import asyncio
 import sys
 
+
 async def parse_arg(args):
     res = {
         "load_type": "auto",  # request browser
@@ -15,7 +16,8 @@ async def parse_arg(args):
         "proxy": "False",
         "anti_bot": "False",
         "url": None,
-        "referer": None
+        "referer": None,
+        "depth": "3"
 
     }
     for arg in args:
@@ -23,13 +25,13 @@ async def parse_arg(args):
         res[arg[0]] = arg[1]
     return res
 
+
 async def main():
     await create_folders()
 
     if len(sys.argv) < 3:
         print("Ошибка: Нет обязательного аргумента url")
         sys.exit(1)
-
 
     args = await parse_arg(sys.argv[1::])
     url = args['url']
@@ -41,5 +43,6 @@ async def main():
             print('Отсутствует параметр url')
     elif args["mode"] == "url_pool":
         await start_url_pool(args)
+
 
 asyncio.run(main())

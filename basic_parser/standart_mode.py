@@ -133,36 +133,39 @@ async def start_standart(url, args):
     else:
         content_list = await choise_Base_or_Dynamic_load(url, args)
 
-    if content_list:
-        link["source_url"] = url
-        link["Content"] = content_list[0]
-        link["links"] = list(set(content_list[1]))
-        link["title"] = content_list[2]
-        link2["Content"] = link["Content"]
-        link2["source_url"] = link["source_url"]
-        link2["title"] = link["title"]
-        result.append(link2)
-
-    links = link["links"]
     chunk_size = int(args["chunk_size"])
-    for i in range(0, len(links), chunk_size):
-        chunk = links[i:i + chunk_size]
-        tasks = []
-        for link_url in chunk:
-            print(f'current link: {link_url}')
-            task = asyncio.create_task(appendChild(link_url, args=args))
-            tasks.append(task)
-        await asyncio.gather(*tasks)
 
-    for i in link["Child elements"]:
-        links = i["links"]
-        for j in range(0, len(links), chunk_size):
-            chunk = links[j:j + chunk_size]
+    if args['depth'] == "2" or args['depth'] == "3":
+        if content_list:
+            link["source_url"] = url
+            link["Content"] = content_list[0]
+            link["links"] = list(set(content_list[1]))
+            link["title"] = content_list[2]
+            link2["Content"] = link["Content"]
+            link2["source_url"] = link["source_url"]
+            link2["title"] = link["title"]
+            result.append(link2)
+
+        links = link["links"]
+        for i in range(0, len(links), chunk_size):
+            chunk = links[i:i + chunk_size]
             tasks = []
             for link_url in chunk:
-                print(f'current link: {link_url} in {i["source_url"]}')
-                task = asyncio.create_task(appendChild(link_url, args, i))
+                print(f'current link: {link_url}')
+                task = asyncio.create_task(appendChild(link_url, args=args))
                 tasks.append(task)
             await asyncio.gather(*tasks)
+
+    if args["depth"] == "3":
+        for i in link["Child elements"]:
+            links = i["links"]
+            for j in range(0, len(links), chunk_size):
+                chunk = links[j:j + chunk_size]
+                tasks = []
+                for link_url in chunk:
+                    print(f'current link: {link_url} in {i["source_url"]}')
+                    task = asyncio.create_task(appendChild(link_url, args, i))
+                    tasks.append(task)
+                await asyncio.gather(*tasks)
 
     TickSvaerTask.cancel()
