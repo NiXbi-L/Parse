@@ -87,7 +87,7 @@ async def choise_Base_or_Dynamic_load(url, args, proxy=None):
 
     if (args["load_type"] == "auto" or args["load_type"] == "request"):
         content_list = await get_content(url, proxy=proxy)
-    elif not (content_list) and (args["load_type"] == "auto" or args["load_type"] == "browser"):
+    if not (content_list) and (args["load_type"] == "auto" or args["load_type"] == "browser"):
         if args['anti_bot'] == 'True':
             content_list = await get_content(url, is_browser=True, anti_bot=True, proxy=proxy)
         else:
@@ -103,7 +103,7 @@ async def appendChild(url, args, append_dict=None):
             "title": content_list[2],
             "publish_time": None,
             "source_url": url,
-            "Content": content_list[0],
+            "Content": list(set(content_list[0])),
             "links": list(set(content_list[1])),
             "Child elements": []
         }
@@ -140,7 +140,7 @@ async def start_standart(url, args):
     if args['depth'] == "2" or args['depth'] == "3":
         if content_list:
             link["source_url"] = url
-            link["Content"] = content_list[0]
+            link["Content"] = list(set(content_list[0]))
             link["links"] = list(set(content_list[1]))
             link["title"] = content_list[2]
             link2["Content"] = link["Content"]
