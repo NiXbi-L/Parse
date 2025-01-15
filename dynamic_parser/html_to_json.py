@@ -23,13 +23,13 @@ link2 = {
 
 result = []
 
+
 async def save_dict_to_json(data, filename):
-    """Асинхронная функция для сохранения данных в JSON-файл."""
     with open(filename, 'w', encoding='utf-8') as f:
         json.dump(data, f, ensure_ascii=False, indent=4)
 
+
 async def get_content_from_file(file_path):
-    """Функция для получения содержимого из HTML-файла."""
     try:
         with open(file_path, 'r', encoding='utf-8') as file:
             html_code = file.read()
@@ -54,6 +54,7 @@ async def get_content_from_file(file_path):
     except Exception as e:
         print(f"Ошибка при обработке файла {file_path}: {e}")
         return False
+
 
 async def appendChild(file_path, append_dict=None):
     """Функция для добавления дочерних элементов."""
@@ -85,18 +86,22 @@ async def appendChild(file_path, append_dict=None):
 
         result.append(lk2)
 
+
 async def html_to_json(html_folder):
-    files = [os.path.join(html_folder, f) for f in os.listdir(html_folder) if f.endswith('.html')]
+    try:
+        files = [os.path.join(html_folder, f) for f in os.listdir(html_folder) if f.endswith('.html')]
 
-    tasks = []
-    for file_path in files:
-        print(f'Обработка файла: {file_path}')
-        task = asyncio.create_task(appendChild(file_path))
-        tasks.append(task)
+        tasks = []
+        for file_path in files:
+            print(f'Обработка файла: {file_path}')
+            task = asyncio.create_task(appendChild(file_path))
+            tasks.append(task)
 
-    await asyncio.gather(*tasks)
+        await asyncio.gather(*tasks)
 
-    # Сохранение результатов в JSON-файлы
-    await save_dict_to_json(result, f"{html_folder}/output.json")
+        # Сохранение результатов в JSON-файлы
+        await save_dict_to_json(result, f"jsons/{html_folder}.json")
 
-    print("Обработка завершена.")
+        print("Обработка завершена.")
+    finally:
+        os.rmdir(html_folder)
