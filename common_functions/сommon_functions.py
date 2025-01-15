@@ -27,7 +27,11 @@ async def download_pdf(url):
 
 async def create_folders(folders=None):
     if folders is None:
-        folders = ['jsons', 'pdf']
+        folders = ['jsons', 'pdf', 'links']
+    else:
+        folders.append('jsons')
+        folders.append('pdf')
+        folders.append('links')
 
     for folder in folders:
         # Проверяем, существует ли папка

@@ -34,6 +34,7 @@ async def main():
         sys.exit(1)
 
     args = await parse_arg(sys.argv[1::])
+    args['file_name'] = args['url'].split('/')[2]
     url = args['url']
     print(args)
     if args["mode"] == "standart":

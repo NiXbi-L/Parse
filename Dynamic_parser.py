@@ -15,8 +15,6 @@ async def parse_arg(args):
         "selector": "a",
         "by": By.TAG_NAME,
         "max_clicks": 10,
-        "html_output_folder": "html_output",
-        "links_file_name": "links.txt",
         "html_to_json": "True",
         "proxy": "False",
         "referer": None
@@ -29,10 +27,11 @@ async def parse_arg(args):
 
 async def main():
     args = await parse_arg(sys.argv[2::])
+    args["html_output_folder"] = sys.argv[1].split('/')[2]
     await create_folders([args["html_output_folder"]])
 
     links = click_elements_sequentially(sys.argv[1], args)
-    await save_links_to_file(list(set(links)), f'{args["html_output_folder"]}/{args["links_file_name"]}')
+    await save_links_to_file(list(set(links)), f'links/{args["html_output_folder"]}.txt')
 
     if args["html_to_json"] == "True":
         await html_to_json(args["html_output_folder"])
